@@ -9,6 +9,7 @@ A branded production dashboard for the Bahamas Real Estate media project, prepar
 - 115 draft video scripts and captions, including The Rum Club feature.
 - 18 Buying in The Bahamas FAQ answers and a full-session script.
 - Shot checklists, production stages, take notes and teleprompter controls.
+- Autosaving notes for each dashboard module, property, community, shoot route and FAQ/script. Property production notes stay separate from agent-confirmation details; FAQ and script notes use the same take log.
 - A nine-week draft release queue.
 - The master Word plan, Excel production tracker and planning map.
 
@@ -38,7 +39,7 @@ node build.mjs
 node check.mjs
 ```
 
-The build inlines the stylesheet, application and catalogue into `dist/index.html`. Upload the entire `dist` directory when deploying manually so the document downloads remain available. Google Fonts and Google Maps need internet access; core dashboard content is bundled.
+The build inlines the stylesheet, application and catalogue into `dist/index.html`. Upload the entire `dist` directory when deploying manually so the document downloads remain available. Google Fonts load without blocking the dashboard, and embedded maps load only when requested. Both need internet access; core dashboard content is bundled. The catalogue is compacted in the generated HTML to reduce the initial transfer size.
 
 ## Editing
 
@@ -58,6 +59,6 @@ Dashboard title: **Bahamas Real Estate Pilot**. Palette: Midnight Navy `#071B2C`
 
 The public listing research snapshot is dated **16 November 2026**. Confirm current availability, price/currency, representation, specifications, permissions and property access before filming or publication. Public Coldwell Banker pages include syndicated IDX listings. There is no automatic MLS refresh, social publishing or booking service.
 
-Production progress is stored in the browser's localStorage. It is not shared between users, devices or domains. Export progress before moving to a new domain or browser, then import the backup there. The existing storage and backup identifiers are retained for compatibility with earlier Sienna Evans dashboard exports.
+Production progress is stored in the browser's localStorage. It is not shared between users, devices or domains. All notes are included in Export progress. Export before moving to a new domain or browser, then import the backup there. Older backups remain compatible; importing one without the new section notes replaces those notes with an empty set. The existing storage and backup identifiers are retained for compatibility with earlier Sienna Evans dashboard exports.
 
 Automated checks cover the nine views, island and MLS filtering, empty states, property and community briefs, feature and FAQ scripts, teleprompter markup, progress persistence, backup validation, escaped text, bundled downloads and standalone build. Browser visual verification is separate from these checks.
