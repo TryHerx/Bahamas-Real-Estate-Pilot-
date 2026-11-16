@@ -35,6 +35,30 @@ vm.runInContext("view='faq';render()",context);assert(els.get('#main').innerHTML
 vm.runInContext("assetModal('F01')",context);assert(els.get('#modal-content').innerHTML.includes('Keep the answer concise'));
 const bounded=vm.runInContext("validImport({application:'sienna-bahamas-production',version:1,data:{notes:{'module:overview':{text:'x'.repeat(12000)},'property:UNKNOWN':{text:'ignore'}}}})",context);
 assert.equal(bounded.notes['module:overview'].text.length,10000);assert.equal(bounded.notes['property:UNKNOWN'],undefined);
+// Career dates use consecutive practice, calendar anniversaries, and Nassau's date.
+const career={licenceDate:'2020-05-01',practiceStart:'2023-06-15',sales:12,rentals:3,volume:2400000,asOf:'2026-11-16'};
+assert.equal(vm.runInContext(`careerProgress(${JSON.stringify(career)},'2026-11-16').target`,context),'2028-06-15');
+assert.equal(vm.runInContext("careerProgress({practiceStart:'2021-11-17'},'2026-11-16').reached",context),false);
+assert.equal(vm.runInContext("careerProgress({practiceStart:'2021-11-16'},'2026-11-16').reached",context),true);
+assert.equal(vm.runInContext("careerProgress({practiceStart:'2020-02-29'},'2025-02-28').target",context),'2025-03-01');
+assert.equal(vm.runInContext("careerProgress({},'2026-11-16').target",context),'');
+assert.equal(vm.runInContext("nassauToday(new Date('2026-11-17T02:00:00Z'))",context),'2026-11-16');
+assert.throws(()=>vm.runInContext("validateCareer({licenceDate:'2026-02-30'},'2026-11-16')",context),/valid date/);
+assert.throws(()=>vm.runInContext("validateCareer({licenceDate:'2027-01-01'},'2026-11-16')",context),/future/);
+assert.throws(()=>vm.runInContext("validateCareer({licenceDate:'2026-01-01',practiceStart:'2025-01-01'},'2026-11-16')",context),/before your licence/);
+assert.throws(()=>vm.runInContext("validateCareer({sales:1.5,asOf:'2026-11-16'},'2026-11-16')",context),/whole numbers/);
+assert.throws(()=>vm.runInContext("validateCareer({volume:-1,asOf:'2026-11-16'},'2026-11-16')",context),/non-negative/);
+assert.throws(()=>vm.runInContext("validateCareer({sales:3},'2026-11-16')",context),/date these transaction/);
+assert.equal(vm.runInContext("validateCareer({asOf:'2026-11-16'},'2026-11-16').asOf",context),'');
+assert.equal(vm.runInContext(`saveCareer(${JSON.stringify(career)})`,context),true);
+({context,els}=environment());assert.equal(vm.runInContext('state.career.sales',context),12);assert.equal(vm.runInContext('state.career.practiceStart',context),'2023-06-15');
+vm.runInContext("const careerBackup=validImport(JSON.parse(JSON.stringify({application:'sienna-bahamas-production',version:1,data:state})));state=careerBackup;view='overview';render()",context);
+assert.equal(vm.runInContext('state.career.volume',context),2400000);
+assert(els.get('#main').innerHTML.indexOf('Career timeline')<els.get('#main').innerHTML.indexOf('Every story starts here.'));
+assert(els.get('#main').innerHTML.includes('15 Jun 2028'));assert(els.get('#main').innerHTML.includes('Board approval'));
+assert.equal(vm.runInContext("validImport({application:'sienna-bahamas-production',version:1,data:{}}).career.licenceDate",context),'');
+vm.runInContext("state.career={licenceDate:'2020-01-01',practiceStart:'2020-01-01',sales:20,rentals:5,volume:3500000,asOf:'2026-11-16'};view='overview';render()",context);
+assert(els.get('#main').innerHTML.includes('Time milestone reached'));assert(els.get('#main').innerHTML.includes('eligibility review still required'));
 const storedBeforeFailure=persisted.get('sienna-bahamas-production-v1');context.localStorage.setItem=()=>{throw Error('Quota exceeded')};
 assert.equal(vm.runInContext("writeNote('module:overview','Unsaved note')",context),false);assert.equal(persisted.get('sienna-bahamas-production-v1'),storedBeforeFailure);
 assert(els.get('.device-note').textContent.includes('not saved'));
@@ -44,4 +68,4 @@ assert(html.includes('rel="stylesheet" media="print"'), 'web fonts must not bloc
 vm.runInContext("view='routes';render()",context);assert(!els.get('#main').innerHTML.includes('<iframe'),'no map request before user interaction');assert(els.get('#main').innerHTML.includes('Load area map'));
 vm.runInContext("loadRouteMap('D05')",context);assert(els.get('#route-map-slot').innerHTML.includes('<iframe'));assert(els.get('#route-map-slot').innerHTML.includes('The%20Rum%20Club'));
 const inlineScripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];assert.equal(inlineScripts.length,2,'standalone scripts');for(const [index,match] of inlineScripts.entries())new vm.Script(match[1],{filename:`standalone-script-${index}.js`});
-console.log('PASS: nine views, island and MLS filters, empty state, property and community cards, feature and FAQ scripts, teleprompter markup, progress and scoped note persistence, note backup round trips and safe rendering, legacy backups, storage failure handling, import filtering and safe text rendering, three downloads and standalone build.');
+console.log('PASS: career timeline dates, validation, persistence and backups; nine views, island and MLS filters, empty state, property and community cards, feature and FAQ scripts, teleprompter markup, progress and scoped note persistence, note backup round trips and safe rendering, legacy backups, storage failure handling, import filtering and safe text rendering, three downloads and standalone build.');

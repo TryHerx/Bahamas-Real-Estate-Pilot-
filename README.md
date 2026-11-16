@@ -4,6 +4,9 @@ A branded production dashboard for the Bahamas Real Estate media project, prepar
 
 ## Included
 
+- Home-page career timeline: licence date, continuous broker-supervised practice, recorded sales/rentals and transaction value, and a projected five-year milestone. No personal dates or totals are prefilled.
+- Broker milestone guidance references the BREA application updated 27 October 2026: https://www.breabahamas.com/download/1794317811.pdf. This is a planning tracker, not an eligibility decision. Totals are manually entered for the rolling five-year window and need rechecking before application.
+
 - 29 property briefs: 20 Nassau / Paradise Island listings and three each in Abaco, Eleuthera and Exuma.
 - 12 community guides and 12 proposed filming blocks.
 - 115 draft video scripts and captions, including The Rum Club feature.
@@ -59,6 +62,6 @@ Dashboard title: **Bahamas Real Estate Pilot**. Palette: Midnight Navy `#071B2C`
 
 The public listing research snapshot is dated **16 November 2026**. Confirm current availability, price/currency, representation, specifications, permissions and property access before filming or publication. Public Coldwell Banker pages include syndicated IDX listings. There is no automatic MLS refresh, social publishing or booking service.
 
-Production progress is stored in the browser's localStorage. It is not shared between users, devices or domains. All notes are included in Export progress. Export before moving to a new domain or browser, then import the backup there. Older backups remain compatible; importing one without the new section notes replaces those notes with an empty set. The existing storage and backup identifiers are retained for compatibility with earlier Sienna Evans dashboard exports.
+Production progress is stored in the browser's localStorage. It is not shared between users, devices or domains. All notes and career timeline details are included in Export progress. Export before moving to a new domain or browser, then import the backup there. Older backups remain compatible; importing one without the new section notes replaces those notes with an empty set. The existing storage and backup identifiers are retained for compatibility with earlier Sienna Evans dashboard exports.
 
 Automated checks cover the nine views, island and MLS filtering, empty states, property and community briefs, feature and FAQ scripts, teleprompter markup, progress persistence, backup validation, escaped text, bundled downloads and standalone build. Browser visual verification is separate from these checks.
